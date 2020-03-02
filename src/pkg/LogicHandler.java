@@ -8,7 +8,7 @@ public class LogicHandler {
 FileHandler fh = new FileHandler();
 
     int[] mainArray = new int[20];
-    String[] bracket_contents = new String[10];
+    String[] bracket_contents = new String[5];
     String localContent;
     {
         try {
@@ -27,7 +27,7 @@ FileHandler fh = new FileHandler();
         System.out.println("Contents: " + localContent);
         captureBracket();
         if(!foundBracket) {
-            for (int i = 0; i < localContent.length(); i++) {
+            for (int i=0; i<localContent.length();i++) {
                 switch (localContent.charAt(i)) {
                     case '+':
                         pointer++;
@@ -52,13 +52,6 @@ FileHandler fh = new FileHandler();
                     case ',':
                         System.out.println(", found");
                         break;
-              /*  case '[':
-                    System.out.println();
-                    break;*/
-               /* case ']':
-                    System.out.println("bracket (]) found");
-                    captureBracket();
-                    break;*/ //Possibly redudant
                 }
             }
         }
@@ -69,10 +62,16 @@ FileHandler fh = new FileHandler();
     }
     private void debug() {
         //captureBracket();
-        for(int i=0;i<bracket_contents.length;i++) {
-            System.out.println(bracket_contents[i]);
-            //prints out whats inside the found bracket
+        for (int i=0;i<bracket_contents.length;i++) {
+            if (!(new String(String.valueOf(bracket_contents[i])).contains("+"))) {
+                // do something
+                System.out.println("found");
+
+            }else if(String.valueOf(bracket_contents[i]).contains("-")) {
+                System.out.println("- found");
+            }
         }
+
         ErrorHandler(0);
     }
     private void captureBracket() {
