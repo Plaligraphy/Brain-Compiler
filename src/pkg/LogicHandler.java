@@ -73,6 +73,7 @@ FileHandler fh = new FileHandler();
             System.out.println(bracket_contents[i]);
             //prints out whats inside the found bracket
         }
+        ErrorHandler(0);
     }
     private void captureBracket() {
         int store = 0;
@@ -88,7 +89,6 @@ FileHandler fh = new FileHandler();
             if (given[i].equalsIgnoreCase("]")) {
                // System.out.println("end of bracketed code = " + i);
                 running=false;
-
             }
             if(running) {
                 bracket_contents[store] = given[i];
@@ -100,6 +100,19 @@ FileHandler fh = new FileHandler();
             }
         }
 
+    }
+    private void ErrorHandler(int opt) {
+        switch(opt) {
+            case 0:
+                System.out.println("Code ran successfully!");
+                break;
+            case 1:
+                System.out.println("Code encountered an error!");
+                break;
+            case 2:
+                System.out.println("test");
+                break;
+        }
     }
 }
 //Pointer if statement is still identifying the commands within the brackets therefore changing the pointer value with
