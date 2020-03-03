@@ -1,2 +1,2 @@
-# BrainFuck Compiler
- Compiler for Brainfuck
+# Compiler for Brain#$%$
+Made by Evan Carter
