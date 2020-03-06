@@ -1,137 +1,91 @@
 package pkg;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+//Current problem: java.lang.ArrayIndexOutOfBoundsException: Index 10 out of bounds for length 10
+//line 68
 
 public class LogicHandler {
-FileHandler fh = new FileHandler();
+    public LogicHandler() throws IOException {
+    }
+    char[] toCompile = getFileContents().toCharArray();
+    int bankCurrent = 0;
     int pointer = 0;
-    int bank = 0;
-    //int brackLoop = 0;
-    int non_null = 0;
-    int[] mainArray = new int[20];
-    String[] bracket_contents = new String[5];
-    String localContent;
-    {
-        try {
-            localContent = fh.readFile();
-        } catch (IOException e) {
-            System.out.println("IOEXCEPT");
-            e.printStackTrace();
-        }
-    }
-    boolean running = false;
-    boolean foundBracket = false;
-
     public void start_Logic() throws IOException {
-        System.out.println("Contents: " + localContent);
-        captureBracket();
-        if(!foundBracket) {
-            for (int i=0; i<localContent.length();i++) {
-                switch (localContent.charAt(i)) {
-                    case '+':
-                        pointer++;
-                        mainArray[bank] = pointer;
-                        break;
-                    case '-':
-                        if (!running) {
-                            pointer--;
-                            mainArray[bank] = pointer;
-                        }
-                        break;
-                    case '>':
-                        bank++;
-                        break;
-                    case '<':
-                        System.out.println("< found");
-                        bank--;
-                        break;
-                    case '.':
-                        System.out.println("0x" + Integer.toHexString(pointer));
-                        break;
-                    case ',':
-                        System.out.println(", found");
-                        break;
-                }
-            }
-        }
-            System.out.println("Pointer: " + pointer);
-            System.out.println("End Bank: " + bank);
-            testingCode();
-            ErrorHandler(0);
-    }
-    private void captureBracket() {
-        int store = 0;
-        boolean alreadyExecuted = false;
-        boolean notgofast = false;
-        String[] given = localContent.split("");
-        for (int i=0;i<given.length;i++) {
-            if (given[i].equalsIgnoreCase("[")) {
-               // System.out.println("start of bracketed code = " + i);
-                i++;
-                running=true;
-                foundBracket=true;
-            }
-            if (given[i].equalsIgnoreCase("]")) {
-               // System.out.println("end of bracketed code = " + i);
-                running=false;
-            }
-            if(running) {
-                bracket_contents[store] = given[i];
-                store++;
-            }
-            if(!alreadyExecuted) {
-                foundBracket=false;
-                alreadyExecuted = true;
+        System.out.println(getFileContents());
+        for(int i=0;i<toCompile.length;i++) {
+            switch(toCompile[i]) {
+                case '[':
+                    for_loop(1,i);
+                    break;
+                case ']':
+                    for_loop(0,i);
+                    break;
+                case '<':
+                    bankCurrent--;
+                 //   System.out.println("bank --");
+                    break;
+                case '+':
+                    pointer++;
+                 //   System.out.println("inc");
+                    break;
+                case '-':
+                    pointer--;
+                //    System.out.println("dec");
+                    break;
+                case '>':
+                    bankCurrent++;
+                //    System.out.println("bank++");
+                    break;
+                case '.':
+                   // System.out.println(pointer);
+                //    System.out.println("out");
+                    break;
+                case ',':
+                 //   System.out.println("out pt2");
+                    break;
             }
 
         }
-        for (int i=0;i<bracket_contents.length;i++)
-            if (Objects.equals(bracket_contents[i], "+")) {
-                pointer--;
-            }else if(Objects.equals(bracket_contents[i], "-")){
-                pointer++;
-            }else if(Objects.equals(bracket_contents[i], ">")){
-                bank--;
-            }
+        System.out.println(bankCurrent);
+        System.out.println(pointer);
     }
-    private void ErrorHandler(int opt) {
-        switch(opt) {
+    private void for_loop(int status, int given_locale) {
+        char[] for_contents = new char[10];
+        int beginning_locale = 0;
+        int ended_locale = 0;
+        switch(status) {
             case 0:
-                System.out.println("Code ran successfully!");
+              //  System.out.println("for loop stopped at");
+                ended_locale = given_locale;
                 break;
             case 1:
-                System.out.println("Code encountered an error!");
-                break;
-            case 2:
-                System.out.println("test");
+               // System.out.println("for loop started");
+                beginning_locale = given_locale;
                 break;
         }
-    }
-    public void testingCode() {
-        int local_pointer = 0;
-        int local_bank = 0;
+        beginning_locale++;
 
-
-       for(int i=0;i<bracket_contents.length;i++) {
-            if(!Objects.equals(bracket_contents[i], null)) {
-                non_null++;
+        for(int c=0;c<pointer;c++) {
+            for_contents[c] = toCompile[c];
+            //System.out.println(for_contents[c]);
+            if(for_contents[c] == '+') {
+                pointer++;
+            }else if(for_contents[c] == '-') {
+                pointer--;
             }
-       }
-       for(int n=0;n<non_null;n++) {
-           if(Objects.equals(bracket_contents[n], "+")) {
-                local_pointer++;
-           }else if(Objects.equals(bracket_contents[n], "-")) {
-                local_pointer--;
-           }else if(Objects.equals(bracket_contents[n], ">")) {
-                bank++;
-           }else if(Objects.equals(bracket_contents[n], "<")) {
-                bank--;
-           }
-       }
+        }
+
+        for(int d=beginning_locale;d<ended_locale;d++){
+            for_contents[d] = toCompile[d];
+            if(for_contents[d] == '+') {
+                pointer--;
+            }else if(for_contents[d] == '-') {              //Has to be last to run
+                pointer++;
+            }
+        }
+    }
+    private String getFileContents() throws IOException {
+        FileHandler file_handle = new FileHandler();
+        return(file_handle.readFile());
     }
 }
-//Pointer if statement is still identifying the commands within the brackets therefore changing the pointer value with
-//the preoccupied bracketed text as a for loop
